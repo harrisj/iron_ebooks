@@ -1,0 +1,9 @@
+Twitter.configure do |config|
+  config.consumer_key = 'KEY'
+  config.consumer_secret = 'KEY'
+  config.oauth_token = 'KEY'
+  config.oauth_token_secret = 'KEY'
+end
+
+$source_account = 'your_regular_account'
+$rand_limit = 10   # run 1 out of every $rand_limit times roughly
