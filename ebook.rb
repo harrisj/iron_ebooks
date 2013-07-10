@@ -11,6 +11,10 @@ $rand_limit ||= 10
 
 puts "PARAMS: #{params}" if params.any?
 
+unless params.key?("tweet")
+  params["tweet"] = true
+end
+
 # randomly running only about 1 in $rand_limit times
 unless rand($rand_limit) == 0 || params["force"]
   puts "Not running this time"
@@ -34,20 +38,27 @@ else
   markov = MarkovChainer.new(2)
   
   source_tweets.each do |twt|
-    markov.add_text(twt.text)
+    text = twt.text
+    text.gsub!(/\#[\w\d]+/, '')  # remove hashtags
+    markov.add_text(text)
   end
   
   tweet = nil
   
   5.times do
     tweet = markov.generate_sentence
-    break if tweet.length < 140 && !source_tweets.any? {|t| t.text =~ /#{tweet}/ }
+    break if !tweet.nil? && tweet.length < 140 && !source_tweets.any? {|t| t.text =~ /#{tweet}/ }
   end
   
-  puts "TWEET: #{tweet}"
-  
-  unless tweet.nil? || tweet == '' || !params["tweet"]
-    Twitter.update(tweet)
+  if params["tweet"]
+    if !tweet.nil? && tweet != ''
+      puts "TWEET: #{tweet}"
+      Twitter.update(tweet)
+    else
+      raise "ERROR: EMPTY TWEET"
+    end
+  else
+    puts "DEBUG: #{tweet}"
   end
 end
 
