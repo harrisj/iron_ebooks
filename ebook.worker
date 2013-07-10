@@ -1,0 +1,9 @@
+# define the runtime language
+runtime "ruby"
+# exec is the file that will be executed:
+exec "ebook.rb"
+
+file "twitter_init.rb"
+file "markov.rb"
+
+gem 'twitter'
