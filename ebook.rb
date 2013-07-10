@@ -9,8 +9,10 @@ source_tweets = []
 
 $rand_limit ||= 10
 
+puts "PARAMS: #{params}" if params.any?
+
 # randomly running only about 1 in $rand_limit times
-unless rand($rand_limit) == 0
+unless rand($rand_limit) == 0 || params["force"]
   puts "Not running this time"
 else
   # Fetch a thousand tweets
@@ -39,12 +41,12 @@ else
   
   5.times do
     tweet = markov.generate_sentence
-    break if !source_tweets.any? {|t| t.text == tweet }
+    break if tweet.length < 140 && !source_tweets.any? {|t| t.text =~ /#{tweet}/ }
   end
   
   puts "TWEET: #{tweet}"
   
-  unless tweet.nil? || tweet == ''
+  unless tweet.nil? || tweet == '' || !params["tweet"]
     Twitter.update(tweet)
   end
 end
