@@ -47,7 +47,7 @@ else
   
   5.times do
     tweet = markov.generate_sentence
-    break if !tweet.nil? && tweet.length < 140 && !source_tweets.any? {|t| t.text =~ /#{tweet}/ }
+    break if !tweet.nil? && tweet.length < 140 && !source_tweets.any? {|t| t.text != tweet }
   end
   
   if params["tweet"]
