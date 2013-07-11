@@ -1,3 +1,5 @@
+#encoding: UTF-8
+
 class MarkovChainer
    attr_reader :order
    def initialize(order)
@@ -35,7 +37,7 @@ class MarkovChainer
 
 private
    def add_sentence(str, terminator)
-     words = str.scan(/[\w'\-]+/)
+     words = str.scan(/[\w'’\-]+/)
      return unless words.size > order # ignore short sentences
      words << terminator
      buf = []
