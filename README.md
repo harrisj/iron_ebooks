@@ -14,3 +14,15 @@ A simple and hackish ruby script for pseudorandomly posting to a _ebooks account
 8. Upload to iron.io with `iron_worker upload ebook`
 9. Run it with `iron_worker queue ebook` a few times
 10. You can schedule it now to run regularly using the scheduler. I'd suggest once every 53 minutes or so.
+
+## Debugging
+
+You can force it to bypass the random running by passing up a payload to queue
+```
+iron_worker queue ebook -p '{"force": true}'
+```
+
+You can also make it run without tweeting by setting the tweet param to false
+```
+iron_worker queue ebook -p '{"force": true, "tweet": false}'
+```
