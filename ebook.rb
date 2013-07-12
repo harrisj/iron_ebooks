@@ -51,7 +51,13 @@ else
   
   5.times do
     tweet = markov.generate_sentence
-    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t =~ /#{tweet}/ }
+
+    if rand(3) == 0 && tweet =~ /(in|to|from|for|with|by|our|of|your|around|under|beyond)\s\w+$/ 
+      puts "Losing last word randomly"
+      tweet.gsub(/\s\w+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
+    end
+
+    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t =~ /^#{tweet}/ || t =~ /#{tweet}$/ }
   end
   
   if params["tweet"]
