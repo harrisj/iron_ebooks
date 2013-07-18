@@ -72,7 +72,11 @@ else
       tweet.gsub(/\s\w+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
     end
 
-    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t =~ /^#{tweet}/ || t =~ /#{tweet}$/ }
+    if !params["tweet"]
+      puts "MARKOV: #{tweet}"
+    end
+
+    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t =~ /#{tweet}/ }
   end
   
   if params["tweet"]
