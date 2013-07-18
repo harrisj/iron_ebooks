@@ -8,6 +8,7 @@ require 'markov'
 source_tweets = []
 
 $rand_limit ||= 10
+$markov_index ||= 2
 
 puts "PARAMS: #{params}" if params.any?
 
@@ -39,7 +40,7 @@ else
   
   puts "#{source_tweets.length} tweets found"
   
-  markov = MarkovChainer.new(2)
+  markov = MarkovChainer.new($markov_index)
   
   source_tweets.each do |twt|
     text = twt
