@@ -15,6 +15,29 @@ A simple and hackish ruby script for pseudorandomly posting to a _ebooks account
 9. Run it with `iron_worker queue ebook` a few times
 10. You can schedule it now to run regularly using the scheduler. I'd suggest once every 53 minutes or so.
 
+## Configuring
+
+There are several parameters that control the behavior of the bot. You can override them by setting them in the twitter_init.rb file. 
+
+```
+$rand_limit = 10
+```
+
+The bot does not run on every invocation. It runs in a pseudorandom fashion whenever `rand($rand_limit) == 0`. You can override it to make it more or less frequent. To make it run every time, you can set it to 0. You can also bypass it on a single invocation by passing `-p '{"force": true}'`
+
+```
+$include_urls = false
+```
+
+By default, the bot ignores any tweets with URLs in them because those might just be headlines for articles and not text you've written. If you want to use them, you can set this parameter to true.
+
+```
+$markov_index = 2
+```
+
+The Markov index is a measure of associativity in the generated Markov chains. I'm not going to go into the theory, but 1 is generally more incoherent and 3 is more lucid. If you want to change this, though.
+
+
 ## Debugging
 
 You can force it to bypass the random running by passing up a payload to queue
