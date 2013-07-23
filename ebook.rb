@@ -76,7 +76,8 @@ else
       puts "MARKOV: #{tweet}"
     end
 
-    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t =~ /#{tweet}/ }
+    tweet_letters = tweet.gsub(/\W/, '')
+    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t.gsub(/\W/, '') =~ /#{tweet_letters}/ }
   end
   
   if params["tweet"]
