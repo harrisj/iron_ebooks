@@ -77,6 +77,11 @@ else
       tweet.gsub(/\s\w+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
     end
 
+    if tweet.length < 40 && rand(5) == 0
+      puts "Short tweet. Adding another sentence randomly"
+      tweet += " #{markov.generate_sentence}"
+    end
+
     if !params["tweet"]
       puts "MARKOV: #{tweet}"
     end
