@@ -59,6 +59,11 @@ else
   
   source_tweets.each do |twt|
     text = twt
+
+    if text !~ /[\.\"\'\?\!]/
+      text += "."
+    end
+    
     markov.add_text(text)
   end
   
