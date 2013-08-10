@@ -60,12 +60,12 @@ else
   source_tweets.each do |twt|
     text = twt
 
-    sentences = text.split(/[\.\"\'\?\!]/)
+    sentences = text.split(/\p{Punct}/)
 
     sentences.each do |sentence|
       next if sentence =~ /@/
 
-      if sentence !~ /[\.\"\'\?\!]$/
+      if sentence !~ /\p{Punct}$/
         sentence += "."
       end
 
@@ -78,9 +78,9 @@ else
   10.times do
     tweet = markov.generate_sentence
 
-    if rand(3) == 0 && tweet =~ /(in|to|from|for|with|by|our|of|your|around|under|beyond)\s\w+$/ 
+    if rand(3) == 0 && tweet =~ /(in|to|from|for|with|by|our|of|your|around|under|beyond)\p{Space}\w+$/ 
       puts "Losing last word randomly"
-      tweet.gsub(/\s\w+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
+      tweet.gsub(/\p{Space}\p{Word}+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
     end
 
     if tweet.length < 40 && rand(10) == 0
@@ -92,8 +92,8 @@ else
       puts "MARKOV: #{tweet}"
     end
 
-    tweet_letters = tweet.gsub(/\W/, '')
-    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t.gsub(/\W/, '') =~ /#{tweet_letters}/ }
+    tweet_letters = tweet.gsub(/\P{Word}/, '')
+    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t.gsub(/\P{Word}/, '') =~ /#{tweet_letters}/ }
   end
   
   if params["tweet"]
