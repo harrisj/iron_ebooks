@@ -11,9 +11,10 @@ A simple and hackish ruby script for pseudorandomly posting to a _ebooks account
 5. Sign into dev.twitter.com with the same credentials
 6. Create an application for your _ebooks account (generate the credentials)
 7. Create a file named twitter_init.rb in this directory with the OAuth credentials and the source account you want to use for seeding the markov process
-8. Upload to iron.io with `iron_worker upload ebook`
-9. Run it with `iron_worker queue ebook` a few times
-10. You can schedule it now to run regularly using the scheduler. I'd suggest once every 53 minutes or so.
+8. Run "bundle install"
+9. Upload to iron.io with `bundle exec iron_worker upload ebook`
+10. Run it with `bundle exec iron_worker queue ebook` a few times
+11. You can schedule it now to run regularly using the scheduler. I'd suggest once every 53 minutes or so.
 
 ## Configuring
 

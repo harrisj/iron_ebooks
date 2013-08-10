@@ -10,9 +10,9 @@ class MarkovChainer
 
    def add_text(text)
      # make sure each paragraph ends with some sentence terminator
-     text.gsub!(/\n\s*\n/m, ".")
+     text.gsub!(/[\r\n]+\p{Space}*[\r\n]+/m, ".")
      text << "."
-     seps = /([.!?;])/
+     seps = /(\p{Punct})/
      sentence = ""
      text.split(seps).each { |p|
        if seps =~ p
@@ -37,7 +37,7 @@ class MarkovChainer
 
 private
    def add_sentence(str, terminator)
-     words = str.scan(/[\w'’\-]+/)
+     words = str.scan(/[\p{Word}'’\-]+/)
      return unless words.size > order # ignore short sentences
      words << terminator
      buf = []
