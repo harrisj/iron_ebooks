@@ -60,11 +60,17 @@ else
   source_tweets.each do |twt|
     text = twt
 
-    if text !~ /[\.\"\'\?\!]/
-      text += "."
+    sentences = text.split(/[\.\"\'\?\!]/)
+
+    sentences.each do |sentence|
+      next if sentence =~ /@/
+
+      if sentence !~ /[\.\"\'\?\!]$/
+        sentence += "."
+      end
+
+      markov.add_text(sentence)
     end
-    
-    markov.add_text(text)
   end
   
   tweet = nil
@@ -77,7 +83,7 @@ else
       tweet.gsub(/\s\w+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
     end
 
-    if tweet.length < 40 && rand(5) == 0
+    if tweet.length < 40 && rand(10) == 0
       puts "Short tweet. Adding another sentence randomly"
       tweet += " #{markov.generate_sentence}"
     end
