@@ -1,4 +1,5 @@
-# Worker code can be anything you want.
+# encoding: UTF-8
+
 require 'rubygems'
 require 'twitter'
 
