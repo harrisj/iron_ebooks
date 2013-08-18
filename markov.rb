@@ -58,7 +58,7 @@ private
     CONTRACTIONS.each do |c|
       str.gsub!(/#{c}/i) {|m| m.gsub("'", CONTRACTION_APOSTROPHE_SUBSTITUTE)}
     end
-    str.gsub!(/'s/, CONTRACTION_APOSTROPHE_SUBSTITUTE)
+    str.gsub!(/'s/, "#{CONTRACTION_APOSTROPHE_SUBSTITUTE}s")
 
     #puts str
      words = str.scan(/[\p{Word}'’\-]+/)
