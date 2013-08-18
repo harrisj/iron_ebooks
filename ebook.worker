@@ -7,3 +7,4 @@ file "twitter_init.rb"
 file "markov.rb"
 
 gem 'twitter'
+gem 'punkt-segmenter'

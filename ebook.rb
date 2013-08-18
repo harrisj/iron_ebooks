@@ -2,7 +2,7 @@
 
 require 'rubygems'
 require 'twitter'
-
+require 'punkt-segmenter'
 require 'twitter_init'
 require 'markov'
 
@@ -27,7 +27,12 @@ def filtered_tweets(tweets)
     source_tweets = source_tweets.reject {|t| t =~ /(https?:\/\/)/ }
   end
 
-  source_tweets.map {|t| t.gsub(/(\#|@|(h\/t)|(http))\S+/, '') }
+  source_tweets.each do |t| 
+    t.gsub!(/(\#|(h\/t)|(http))\S+/, '')
+    t += "." if t !~ /[.?;:!]$/
+  end
+
+  source_tweets
 end
 
 # randomly running only about 1 in $rand_limit times
@@ -44,6 +49,7 @@ else
     17.times do
       user_tweets = Twitter.user_timeline($source_account, :count => 200, :trim_user => true, :max_id => max_id - 1, :exclude_replies => true, :include_rts => false)
       puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
+      break if user_tweets.last.nil?
       max_id = user_tweets.last.id
       source_tweets += filtered_tweets(user_tweets)
     end
@@ -57,20 +63,24 @@ else
   end
   
   markov = MarkovChainer.new($markov_index)
-  
-  source_tweets.each do |twt|
-    text = twt
 
-    sentences = text.split(/\p{Punct}/)
+  tokenizer = Punkt::SentenceTokenizer.new(source_tweets.join(" "))  # init with corpus of all sentences
+
+  source_tweets.each do |twt|
+    sentences = tokenizer.sentences_from_text(twt, :output => :sentences_text)
+
+    # sentences = text.split(/[.:;?!]/)
+
+    # sentences.each do |sentence|
+    #   next if sentence =~ /@/
+
+    #   if sentence !~ /\p{Punct}$/
+    #     sentence += "."
+    #   end
 
     sentences.each do |sentence|
       next if sentence =~ /@/
-
-      if sentence !~ /\p{Punct}$/
-        sentence += "."
-      end
-
-      markov.add_text(sentence)
+      markov.add_sentence(sentence)
     end
   end
   
