@@ -19,6 +19,12 @@ end
 
 rand_key = rand($rand_limit)
 
+CLOSING_PUNCTUATION = ['.', ';', ':', '?', '!']
+
+def random_closing_punctuation
+  CLOSING_PUNCTUATION[rand(CLOSING_PUNCTUATION.length)]
+end
+
 def filtered_tweets(tweets)
   include_urls = $include_urls || params["include_urls"]
   source_tweets = tweets.map {|t| t.text.gsub(/\b(RT|MT) .+/, '') }
@@ -89,6 +95,9 @@ else
   10.times do
     tweet = markov.generate_sentence
 
+    tweet_letters = tweet.gsub(/\P{Word}/, '')
+    next if source_tweets.any? {|t| t.gsub(/\P{Word}/, '') =~ /#{tweet_letters}/ }
+
     if rand(3) == 0 && tweet =~ /(in|to|from|for|with|by|our|of|your|around|under|beyond)\p{Space}\w+$/ 
       puts "Losing last word randomly"
       tweet.gsub(/\p{Space}\p{Word}+.$/, '')   # randomly losing the last word sometimes like horse_ebooks
@@ -96,6 +105,11 @@ else
 
     if tweet.length < 40 && rand(10) == 0
       puts "Short tweet. Adding another sentence randomly"
+      next_sentence = markov.generate_sentence
+      tweet_letters = next_sentence.gsub(/\P{Word}/, '')
+      next if source_tweets.any? {|t| t.gsub(/\P{Word}/, '') =~ /#{tweet_letters}/ }
+
+      tweet += random_closing_punctuation if tweet !~ /[.;:?!]$/
       tweet += " #{markov.generate_sentence}"
     end
 
@@ -103,8 +117,7 @@ else
       puts "MARKOV: #{tweet}"
     end
 
-    tweet_letters = tweet.gsub(/\P{Word}/, '')
-    break if !tweet.nil? && tweet.length < 110 && !source_tweets.any? {|t| t.gsub(/\P{Word}/, '') =~ /#{tweet_letters}/ }
+    break if !tweet.nil? && tweet.length < 110
   end
   
   if params["tweet"]
