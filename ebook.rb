@@ -5,6 +5,7 @@ require 'twitter'
 require 'punkt-segmenter'
 require 'twitter_init'
 require 'markov'
+require 'htmlentities'
 
 source_tweets = []
 
@@ -26,9 +27,10 @@ def random_closing_punctuation
 end
 
 def filtered_tweets(tweets)
+  html_decoder = HTMLEntities.new
   include_urls = $include_urls || params["include_urls"]
   include_replies = $include_replies || params["include_replies"]
-  source_tweets = tweets.map {|t| t.text.gsub(/\b(RT|MT) .+/, '') }
+  source_tweets = tweets.map {|t| html_decoder.decode(t.text).gsub(/\b(RT|MT) .+/, '') }
 
   if !include_urls
     source_tweets = source_tweets.reject {|t| t =~ /(https?:\/\/)/ }
@@ -53,19 +55,20 @@ unless rand_key == 0 || params["force"]
 else
   # Fetch a thousand tweets
   begin
-    user_tweets = Twitter.user_timeline($source_account, :count => 200, :trim_user => true, :exclude_replies => false, :include_rts => false)
+    user_tweets = Twitter.user_timeline($source_account, :count => 200, :trim_user => true, :include_rts => false)
     max_id = user_tweets.last.id
     source_tweets += filtered_tweets(user_tweets)
   
     # Twitter only returns up to 3200 of a user timeline, includes retweets.
     17.times do
-      user_tweets = Twitter.user_timeline($source_account, :count => 200, :trim_user => true, :max_id => max_id - 1, :exclude_replies => false, :include_rts => false)
+      user_tweets = Twitter.user_timeline($source_account, :count => 200, :trim_user => true, :max_id => max_id - 1, :include_rts => false)
       puts "MAX_ID #{max_id} TWEETS: #{user_tweets.length}"
       break if user_tweets.last.nil?
       max_id = user_tweets.last.id
       source_tweets += filtered_tweets(user_tweets)
     end
-  rescue
+  rescue => ex
+    puts ex.message
   end
   
   puts "#{source_tweets.length} tweets found"

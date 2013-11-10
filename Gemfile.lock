@@ -7,6 +7,7 @@ GEM
     faraday (0.8.7)
       multipart-post (~> 1.1)
     ffi (1.9.0)
+    htmlentities (4.3.1)
     iron_core (0.6.2)
       rest (>= 2.2.0)
     iron_worker_ng (0.16.4)
@@ -38,6 +39,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  htmlentities
   iron_worker_ng
   punkt-segmenter
   twitter

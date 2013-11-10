@@ -8,3 +8,4 @@ file "markov.rb"
 
 gem 'twitter'
 gem 'punkt-segmenter'
+gem 'htmlentities'
