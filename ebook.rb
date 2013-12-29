@@ -82,6 +82,7 @@ else
   tokenizer = Punkt::SentenceTokenizer.new(source_tweets.join(" "))  # init with corpus of all sentences
 
   source_tweets.each do |twt|
+    next if twt.nil? || twt == ''
     sentences = tokenizer.sentences_from_text(twt, :output => :sentences_text)
 
     # sentences = text.split(/[.:;?!]/)
